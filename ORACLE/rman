@@ -1,0 +1,43 @@
+RMAN>
+
+connect target /
+
+run {allocate channel d1 type disk;
+backup full format '/u01/oradata/rman_%d_%U.bus' database;}
+---------------
+shell script:
+#!/bin/ksh
+#----------------------------------------------
+export TARGET_CONN=sys/gober@brdstn
+export CATALOG_CONN=rman_cat_owner/gando@rman_cat
+#----------------------------------------------
+rman <<EOF
+# Connect to the target and the catalog
+connect target ${TARGET_CONN}
+connect catalog ${CATALOG_CONN}
+# Run the backup command.
+run { allocate channel d1 type disk;
+backup full format
+'/d0102/backup/rman_%U.bus' database; }
+EOF
+#
+exit
+
+
+
+... #Test for success of RMAN operation
+if [ $? -ne 0 ]; then
+# notify adminstrator of problem
+fi
+
+
+
+$ chmod 750 filename
+
+
+
+ALTER DATABASE BACKUP CONTROLFILE
+
+
+
+

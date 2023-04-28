@@ -1,0 +1,20 @@
+yum install -y dotnet-sdk
+yum install dotnet-*
+yum install -y nuget
+yum install -y nuget-packages
+
+yum install -y  mono-complete
+yum install -y  supervisord
+
+
+
+systemctl enable supervisord
+systemctl start supervisord
+systemctl restart supervisord
+
+supervisorctl status
+supervisorctl reread
+vi /etc/supervisord.d/JudicialInquiry.conf
+
+
+

@@ -1,0 +1,22 @@
+CONFIGURE BACKUP OPTIMIZATION ON;
+CONFIGURE RETENTION POLICY TO RECOVERY WINDOW OF 2 DAYS;
+CONFIGURE CONTROLFILE AUTOBACKUP ON;
+
+delete noprompt obsolete device type disk;
+Crosscheck backup;
+Delete noprompt expired backup;
+Crosscheck archivelog all;
+delete noprompt expired archivelog all;
+
+run {
+backup incremental level 1 as COMPRESSED BACKUPSET database include current controlfile TAG VB_Diff;
+backup as BACKUPSET archivelog all not backed up delete all input TAG VB_ARC;
+}
+
+allocate channel for maintenance type disk;
+delete noprompt obsolete device type disk;
+Crosscheck backup;
+Delete noprompt expired backup;
+Crosscheck archivelog all;
+delete noprompt expired archivelog all;
+release channel;

@@ -1,0 +1,26 @@
+#rman target / auxiliary sys@dispatch_guard
+
+RUN 
+{
+  ALLOCATE AUXILIARY CHANNEL aux1 DEVICE TYPE DISK;
+  ALLOCATE AUXILIARY CHANNEL aux2 DEVICE TYPE DISK;
+  ALLOCATE AUXILIARY CHANNEL aux3 DEVICE TYPE DISK;
+  DUPLICATE TARGET DATABASE TO orcl 
+  FROM ACTIVE DATABASE
+  nofilenamecheck;
+}
+
+
+DUPLICATE DATABASE TO orcl
+  FROM ACTIVE DATABASE
+  SPFILE
+  NOFILENAMECHECK;
+  
+  
+  
+  
+  
+  
+  RMAN> crosscheck archivelog sequence 4437 thread 2;
+
+RMAN> crosscheck backup of archivelog sequence 4437 thread 2;

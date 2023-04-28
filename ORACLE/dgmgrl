@@ -1,0 +1,10 @@
+connect /
+
+
+show configuration;
+enable configuration
+
+
+
+ADD DATABASE dispatch_guard AS CONNECT IDENTIFIER IS dispatch_guard MAINTAINED AS PHYSICAL;
+

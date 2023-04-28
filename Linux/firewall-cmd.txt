@@ -1,0 +1,16 @@
+firewall-cmd --permanent --new-zone=enb_apps
+firewall-cmd --reload
+
+firewall-cmd --list-all-zones | grep active
+
+firewall-cmd --zone=public --list-all
+
+
+
+
+
+
+firewall-cmd --zone=enb_apps --add-source=172.50.241.25/32 --permanent
+
+firewall-cmd --zone=enb_apps --add-port=1525/tcp --permanent
+firewall-cmd --reload

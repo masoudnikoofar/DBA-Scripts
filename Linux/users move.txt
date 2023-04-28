@@ -1,0 +1,30 @@
+Server 1:
+mkdir /root/move/
+export UGIDLIMIT=500
+awk -v LIMIT=$UGIDLIMIT -F: '($3>=LIMIT) && ($3!=65534)' /etc/passwd > /root/move/passwd.mig
+awk -v LIMIT=$UGIDLIMIT -F: '($3>=LIMIT) && ($3!=65534)' /etc/group > /root/move/group.mig
+awk -v LIMIT=$UGIDLIMIT -F: '($3>=LIMIT) && ($3!=65534) {print $1}' /etc/passwd | tee - |egrep -f - /etc/shadow > /root/move/shadow.mig
+cp /etc/gshadow /root/move/gshadow.mig
+tar -zcvpf /root/move/home.tar.gz /home
+tar -zcvpf /root/move/mail.tar.gz /var/spool/mail
+
+
+
+
+scp -r /root/move/* root@172.50.250.220:/tmp
+
+Server 2:
+
+
+mkdir /root/newsusers.bak
+cp /etc/passwd /etc/shadow /etc/group /etc/gshadow /root/newsusers.bak
+
+cd /tmp
+cat passwd.mig >> /etc/passwd
+cat group.mig >> /etc/group
+cat shadow.mig >> /etc/shadow
+/bin/cp gshadow.mig /etc/gshadow
+cd /
+tar -zxvf /tmp/home.tar.gz
+cd /
+tar -zxvf /tmp/mail.tar.gz

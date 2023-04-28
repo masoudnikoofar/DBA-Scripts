@@ -1,0 +1,53 @@
+dotnet nuget locals all --list
+
+dotnet restore --source C:\Users\bigfo\.nuget\packages\
+dotnet build --no-restore
+dotnet run --no-restore
+###################
+
+
+
+https://www.vultr.com/docs/how-to-deploy-a-net-core-web-application-on-centos-7
+yum install supervisor -y
+cd /etc/supervisord.d
+vi myfirstwebapp.conf
+
+
+cd /etc/supervisord.d
+sudo vi myfirstwebapp.conf
+
+[program:myfirstwebapp]
+command=dotnet myfirstwebapp.dll
+directory=/home/sudouser/myfirstwebapp/bin/Debug/netcoreapp2.0/
+environment=ASPNETCORE__ENVIRONMENT=Production
+user=root
+stopsignal=INT
+autostart=true
+autorestart=true
+startsecs=1
+stderr_logfile=/var/log/myfirstwebapp.err.log
+stdout_logfile=/var/log/myfirstwebapp.out.log
+
+
+
+systemctl start supervisord.service
+systemctl enable supervisord.service
+
+systemctl restart supervisord.service
+supervisorctl reread
+supervisorctl update
+supervisorctl status
+
+
+
+
+
+
+
+
+
+
+
+
+
+dotnet publish --configuration Release
