@@ -12,7 +12,7 @@ cat /etc/odbc.ini
 Description         = MyUptimeMysqlServer
 Driver              = MySQL
 Database            = uptimedb1
-Server              = 12.34.56.78
+Server              = xx.xx.xx.xx
 User                = myuserhere
 Password            = mypasswordhere
 Port                = 3306

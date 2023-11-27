@@ -1,0 +1,43 @@
+CONFIGURE BACKUP OPTIMIZATION ON;
+CONFIGURE RETENTION POLICY TO REDUNDANCY 1;
+#CONFIGURE RETENTION POLICY TO RECOVERY WINDOW OF 2 DAYS;
+CONFIGURE CONTROLFILE AUTOBACKUP ON;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE disk TO '/u01/Backup/Rman/Inc1/backup_controlfile_%F'; # default
+
+
+RUN
+{
+        crosscheck backup;
+        crosscheck archivelog all;
+        delete noprompt expired backup;
+        delete noprompt obsolete;
+        backup current controlfile  format '/u01/Backup/Rman/Inc1/backup_controlfile_%T_%s_%d.bak';
+        delete noprompt obsolete;
+}
+
+
+RUN
+{
+        crosscheck backup;
+        crosscheck archivelog all;
+        delete noprompt expired backup;
+        delete noprompt obsolete;
+        allocate channel c1 device type disk format '/u01/Backup/Rman/Inc1/backup_inc1_%T_%s_%d.bak';
+        allocate channel c2 device type disk format '/u01/Backup/Rman/Inc1/backup_inc1_%T_%s_%d.bak';
+        allocate channel c3 device type disk format '/u01/Backup/Rman/Inc1/backup_inc1_%T_%s_%d.bak';
+		backup incremental level 1 as COMPRESSED BACKUPSET database;
+        delete noprompt obsolete;
+}
+
+
+
+RUN
+{
+        crosscheck backup;
+        crosscheck archivelog all;
+        delete noprompt expired backup;
+        delete noprompt obsolete;
+        allocate channel c1 device type disk format '/u01/Backup/Rman/Inc1/backup_archivelog_%T_%s_%d.bak';
+        backup archivelog all not backed up delete all input;
+        delete noprompt obsolete;
+}

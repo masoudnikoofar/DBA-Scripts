@@ -1,6 +1,0 @@
-yum install -y libcap-devel libpcap-devel libpcap openssl-devel
-
-rpm -ivh java-1.7.0-openjdk-1.7.0.65-2.5.1.2.0.1.el5_10.x86_64.rpm
-export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.65.x86_64/jre/
-java -jar agent.jar
-./agentctl start -k

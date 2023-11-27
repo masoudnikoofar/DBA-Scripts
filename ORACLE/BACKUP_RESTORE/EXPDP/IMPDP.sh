@@ -1,0 +1,1 @@
+impdp sys as sysdba full=Y directory=MASOUD_DUMPS dumpfile=FULL.DMP logfile=FULL.LOG table_exists_action=???

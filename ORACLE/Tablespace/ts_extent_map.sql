@@ -1,10 +1,10 @@
 -- -----------------------------------------------------------------------------------
--- File Name    : https://oracle-base.com/dba/monitoring/ts_extent_map.sql
--- Author       : Tim Hall
--- Description  : Displays gaps (empty space) in a tablespace or specific datafile.
--- Requirements : Access to the DBA views.
--- Call Syntax  : @ts_extent_map (tablespace-name) [all | file_id]
--- Last Modified: 25/01/2003
+-- FILE NAME    : HTTPS://ORACLE-BASE.COM/DBA/MONITORING/TS_EXTENT_MAP.SQL
+-- AUTHOR       : TIM HALL
+-- DESCRIPTION  : DISPLAYS GAPS (EMPTY SPACE) IN A TABLESPACE OR SPECIFIC DATAFILE.
+-- REQUIREMENTS : ACCESS TO THE DBA VIEWS.
+-- CALL SYNTAX  : @TS_EXTENT_MAP (TABLESPACE-NAME) [ALL | FILE_ID]
+-- LAST MODIFIED: 25/01/2003
 -- -----------------------------------------------------------------------------------
 SET SERVEROUTPUT ON SIZE 1000000
 SET FEEDBACK OFF
@@ -12,54 +12,54 @@ SET TRIMOUT ON
 SET VERIFY OFF
 
 DECLARE
-  l_tablespace_name VARCHAR2(30) := UPPER('&1');
-  l_file_id         VARCHAR2(30) := UPPER('&2');
+  L_TABLESPACE_NAME VARCHAR2(30) := UPPER('&1');
+  L_FILE_ID         VARCHAR2(30) := UPPER('&2');
 
-  CURSOR c_extents IS
-    SELECT owner,
-           segment_name,
-           file_id,
-           block_id AS start_block,
-           block_id + blocks - 1 AS end_block
-    FROM   dba_extents
-    WHERE  tablespace_name = l_tablespace_name
-    AND    file_id = DECODE(l_file_id, 'ALL', file_id, TO_NUMBER(l_file_id))
-    ORDER BY file_id, block_id;
+  CURSOR C_EXTENTS IS
+    SELECT OWNER,
+           SEGMENT_NAME,
+           FILE_ID,
+           BLOCK_ID AS START_BLOCK,
+           BLOCK_ID + BLOCKS - 1 AS END_BLOCK
+    FROM   DBA_EXTENTS
+    WHERE  TABLESPACE_NAME = L_TABLESPACE_NAME
+    AND    FILE_ID = DECODE(L_FILE_ID, 'ALL', FILE_ID, TO_NUMBER(L_FILE_ID))
+    ORDER BY FILE_ID, BLOCK_ID;
 
-  l_block_size     NUMBER  := 0;
-  l_last_file_id   NUMBER  := 0;
-  l_last_block_id  NUMBER  := 0;
-  l_gaps_only      BOOLEAN := TRUE;
-  l_total_blocks   NUMBER  := 0;
+  L_BLOCK_SIZE     NUMBER  := 0;
+  L_LAST_FILE_ID   NUMBER  := 0;
+  L_LAST_BLOCK_ID  NUMBER  := 0;
+  L_GAPS_ONLY      BOOLEAN := TRUE;
+  L_TOTAL_BLOCKS   NUMBER  := 0;
 BEGIN
-  SELECT block_size
-  INTO   l_block_size
-  FROM   dba_tablespaces
-  WHERE  tablespace_name = l_tablespace_name;
+  SELECT BLOCK_SIZE
+  INTO   L_BLOCK_SIZE
+  FROM   DBA_TABLESPACES
+  WHERE  TABLESPACE_NAME = L_TABLESPACE_NAME;
 
-  DBMS_OUTPUT.PUT_LINE('Tablespace Block Size (bytes): ' || l_block_size);
-  FOR cur_rec IN c_extents LOOP
-    IF cur_rec.file_id != l_last_file_id THEN
-      l_last_file_id  := cur_rec.file_id;
-      l_last_block_id := cur_rec.start_block - 1;
+  DBMS_OUTPUT.PUT_LINE('TABLESPACE BLOCK SIZE (BYTES): ' || L_BLOCK_SIZE);
+  FOR CUR_REC IN C_EXTENTS LOOP
+    IF CUR_REC.FILE_ID != L_LAST_FILE_ID THEN
+      L_LAST_FILE_ID  := CUR_REC.FILE_ID;
+      L_LAST_BLOCK_ID := CUR_REC.START_BLOCK - 1;
     END IF;
     
-    IF cur_rec.start_block > l_last_block_id + 1 THEN
-      DBMS_OUTPUT.PUT_LINE('*** GAP *** (' || l_last_block_id || ' -> ' || cur_rec.start_block || ')' ||
-        ' FileID=' || cur_rec.file_id ||
-        ' Blocks=' || (cur_rec.start_block-l_last_block_id-1) || 
-        ' Size(MB)=' || ROUND(((cur_rec.start_block-l_last_block_id-1) * l_block_size)/1024/1024,2)
+    IF CUR_REC.START_BLOCK > L_LAST_BLOCK_ID + 1 THEN
+      DBMS_OUTPUT.PUT_LINE('*** GAP *** (' || L_LAST_BLOCK_ID || ' -> ' || CUR_REC.START_BLOCK || ')' ||
+        ' FILEID=' || CUR_REC.FILE_ID ||
+        ' BLOCKS=' || (CUR_REC.START_BLOCK-L_LAST_BLOCK_ID-1) || 
+        ' SIZE(MB)=' || ROUND(((CUR_REC.START_BLOCK-L_LAST_BLOCK_ID-1) * L_BLOCK_SIZE)/1024/1024,2)
       );
-      l_total_blocks := l_total_blocks + cur_rec.start_block - l_last_block_id-1;
+      L_TOTAL_BLOCKS := L_TOTAL_BLOCKS + CUR_REC.START_BLOCK - L_LAST_BLOCK_ID-1;
     END IF;
-    l_last_block_id := cur_rec.end_block;
-    IF NOT l_gaps_only THEN
-      DBMS_OUTPUT.PUT_LINE(RPAD(cur_rec.owner || '.' || cur_rec.segment_name, 40, ' ') ||
-                           ' (' || cur_rec.start_block || ' -> ' || cur_rec.end_block || ')');
+    L_LAST_BLOCK_ID := CUR_REC.END_BLOCK;
+    IF NOT L_GAPS_ONLY THEN
+      DBMS_OUTPUT.PUT_LINE(RPAD(CUR_REC.OWNER || '.' || CUR_REC.SEGMENT_NAME, 40, ' ') ||
+                           ' (' || CUR_REC.START_BLOCK || ' -> ' || CUR_REC.END_BLOCK || ')');
     END IF;
   END LOOP;
-  DBMS_OUTPUT.PUT_LINE('Total Gap Blocks: ' || l_total_blocks);
-  DBMS_OUTPUT.PUT_LINE('Total Gap Space (MB): ' || ROUND((l_total_blocks * l_block_size)/1024/1024,2));
+  DBMS_OUTPUT.PUT_LINE('TOTAL GAP BLOCKS: ' || L_TOTAL_BLOCKS);
+  DBMS_OUTPUT.PUT_LINE('TOTAL GAP SPACE (MB): ' || ROUND((L_TOTAL_BLOCKS * L_BLOCK_SIZE)/1024/1024,2));
 END;
 /
 

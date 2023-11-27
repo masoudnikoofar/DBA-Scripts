@@ -1,0 +1,4 @@
+SELECT 
+DAYNAME('1980-12-05' + INTERVAL (seq) DAY) day,
+'1980-12-05' + INTERVAL (seq) DAY date 
+FROM seq_0_to_1000;

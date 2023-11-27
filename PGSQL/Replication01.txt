@@ -1,14 +1,6 @@
-192.168.50.75	s1vldbmobt01
-192.168.50.222	dbmonitoringtest
-
-
-
-########master
-CREATE USER REPLICA REPLICATION LOGIN ENCRYPTED PASSWORD 'Pa1HQ53Qu1hLKJ7c4So37jJ08jAegu';
-
+########PRIMARY
+CREATE USER REPLICA REPLICATION LOGIN ENCRYPTED PASSWORD 'PASSWORD';
 \du
-
-
 
 vi postgresql.conf
 
@@ -19,15 +11,11 @@ archive_command='cp -i %p /var/lib/pgsql/data/archive/%f'
 max_wal_senders = 3
 wal_keep_segments = 8
 
-
-
-
 vi pg_hba.conf
 
-host    replication     replica 192.168.50.222/24       md5
+host    replication     replica SECONDARY_IP_ADDRESS/24       md5
 
-
-########slave
+########SECONDARY
 vi postgresql.conf
 
 wal_level = hot_standby
@@ -41,9 +29,8 @@ su - postgres
 
 mv /var/lib/pgsql/data /var/lib/pgsql/data_original
 
-pg_basebackup -h 192.168.50.75 -D /var/lib/pgsql/10/data -U replica -v -P
+pg_basebackup -h PRIMARY_IP_ADDRESS -D /var/lib/pgsql/10/data -U replica -v -P
 
 vi recovery.conf
-
 
 pg_resetxlog /var/lib/pgsql/data -f

@@ -1,1 +1,0 @@
-emca -config dbcontrol db -repos recreate -ORACLE_HOSTNAME $ORACLE_HOSTNAME -SID $ORACLE_SID -PORT 1521 -ORACLE_HOME $ORACLE_HOME -DBDNMP_PWD sys

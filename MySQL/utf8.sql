@@ -1,6 +1,6 @@
-alter table hdd_base_catchers modify fullname varchar(50) character set utf8 collate utf8_unicode_ci;
-update hdd_base_catchers set fullname=cast(convert(fullname using latin1) as binary)
+alter table TABLE_NAME modify COLUMN_NAME varchar(50) character set utf8 collate utf8_unicode_ci;
+update TABLE_NAME set COLUMN_NAME=cast(convert(COLUMN_NAME using latin1) as binary)
 
 
-alter table dbs_backup_checklist modify comment text character set utf8 collate utf8_unicode_ci;
-update dbs set project_name= convert(cast(convert(project_name using latin1) as binary) using utf8)
+alter table TABLE_NAME modify COLUMN_NAME text character set utf8 collate utf8_unicode_ci;
+update TABLE_NAME set COLUMN_NAME= convert(cast(convert(COLUMN_NAME using latin1) as binary) using utf8)

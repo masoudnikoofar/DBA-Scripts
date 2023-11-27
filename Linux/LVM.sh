@@ -1,37 +1,20 @@
-pvcreate /dev/mapper/ESFANDIAR_01  
-pvcreate /dev/mapper/ESFANDIAR_02  
-pvcreate /dev/mapper/ESFANDIAR_03  
-pvcreate /dev/mapper/ESFANDIAR_04  
-pvcreate /dev/mapper/ESFANDIAR_05  
-pvcreate /dev/mapper/ESFANDIAR_06  
-pvcreate /dev/mapper/ESFANDIAR_07  
-pvcreate /dev/mapper/ESFANDIAR_08  
-pvcreate /dev/mapper/ESFANDIAR_09  
-pvcreate /dev/mapper/ESFANDIAR_10  
+pvcreate /dev/mapper/PV_NAME_01  
+pvcreate /dev/mapper/PV_NAME_02  
 pvscan
-pvdisplay /dev/mapper/ESFANDIAR_01
+pvdisplay /dev/mapper/PV_NAME_01
 ##################################
-vgcreate ESFANDIAR_VG /dev/mapper/ESFANDIAR_01
+vgcreate VG_NAME /dev/mapper/ESFANDIAR_01
 vgscan
-vgdisplay ESFANDIAR_VG
+vgdisplay VG_NAME
 ##################################
-vgextend ESFANDIAR_VG /dev/mapper/ESFANDIAR_02  
-vgextend ESFANDIAR_VG /dev/mapper/ESFANDIAR_03  
-vgextend ESFANDIAR_VG /dev/mapper/ESFANDIAR_04  
-vgextend ESFANDIAR_VG /dev/mapper/ESFANDIAR_05  
-vgextend ESFANDIAR_VG /dev/mapper/ESFANDIAR_06  
-vgextend ESFANDIAR_VG /dev/mapper/ESFANDIAR_07  
-vgextend ESFANDIAR_VG /dev/mapper/ESFANDIAR_08  
-vgextend ESFANDIAR_VG /dev/mapper/ESFANDIAR_09  
-vgextend ESFANDIAR_VG /dev/mapper/ESFANDIAR_10  
+vgextend VG_NAME /dev/mapper/PV_NAME_01  
+vgextend VG_NAME /dev/mapper/PV_NAME_02  
 ##################################
-lvcreate --size 19.99TB --name ESFANDIAR_LV ESFANDIAR_VG
+lvcreate --size xTB --name LV_NAME VG_NAME
 lvscan
 lvs
-lvdisplay ESFANDIAR_VG/ESFANDIAR_LV
+lvdisplay VG_NAME/LV_NAME
 
+mkfs.ext4 /dev/VG_NAME/LV_NAME
 
-mkfs.ext4 /dev/ESFANDIAR_VG/ESFANDIAR_LV
-
-
-lvextend --size +500M --resizefs ESFANDIAR_VG/ESFANDIAR_LV
+lvextend --size +500M --resizefs VG_NAME/LV_NAME

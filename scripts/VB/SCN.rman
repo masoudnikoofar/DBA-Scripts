@@ -1,3 +1,0 @@
-alter system switch logfile;
-select current_scn from v$database;
-exit;

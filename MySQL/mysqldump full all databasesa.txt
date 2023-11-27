@@ -1,6 +1,6 @@
 NOW=$(date +"%Y%m%d_%H%M%S")
-server_name="CentralMySQL"
-dumpdir=/root/DB_Backups/Full/
+server_name="SERVER_NAME"
+dumpdir=/path/DB_Backups/Full/
 
 cd $dumpdir
 mkdir -p $NOW
@@ -16,9 +16,9 @@ done
 cd $dumpdir
 tar czvf $NOW.tar.gz $NOW
 
-HOST=172.50.241.220  #This is the FTP servers host or IP address.
-USER=enb_172_50_241_20            #This is the FTP user that has access to the server.
-PASS=zZ8t76dUMtL25mqUhf5591sRSX3TeA          #This is the password for the FTP user.
+HOST=FTP_SERVER_IP_ADDRESS  #This is the FTP servers host or IP address.
+USER=FTP_SERVER_USER_NAME   #This is the FTP user that has access to the server.
+PASS=FTP_SERVER_PASSWORD    #This is the password for the FTP user.
 ftp -inv $HOST << EOF
 user $USER $PASS
 binary
@@ -26,4 +26,4 @@ put $NOW.tar.gz
 bye
 EOF
 
-find /root/DB_Backups/Full -type f -name '*.sql' -mtime +10 -exec rm -rf {} \;
+find $dumpdir -type f -name '*.sql' -mtime +10 -exec rm -rf {} \;
