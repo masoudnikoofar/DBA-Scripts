@@ -1,205 +1,206 @@
--- Oracle SQL query over the view that shows database state:
-select * from v$instance
+-- ORACLE SQL QUERY OVER THE VIEW THAT SHOWS DATABASE STATE:
+SELECT * FROM V$INSTANCE
 
--- Oracle SQL query that shows if database is opened
-select status from v$instance
+-- ORACLE SQL QUERY THAT SHOWS IF DATABASE IS OPENED
+SELECT STATUS FROM V$INSTANCE
 
--- Oracle SQL query over the view that show Oracle database general parameters
-select * from v$system_parameter
+-- ORACLE SQL QUERY OVER THE VIEW THAT SHOW ORACLE DATABASE GENERAL PARAMETERS
+SELECT * FROM V$SYSTEM_PARAMETER
 
--- Oracle SQL query to know Oracle version
-select value from v$system_parameter where name = 'compatible'
+-- ORACLE SQL QUERY TO KNOW ORACLE VERSION
+SELECT VALUE FROM V$SYSTEM_PARAMETER WHERE NAME = 'COMPATIBLE'
 
--- Oracle SQL query to know the path and name of spfile
-select value from v$system_parameter where name = 'spfile'
+-- ORACLE SQL QUERY TO KNOW THE PATH AND NAME OF SPFILE
+SELECT VALUE FROM V$SYSTEM_PARAMETER WHERE NAME = 'SPFILE'
 
--- Oracle SQL query to know the localization and number of control files
-select value from v$system_parameter where name = 'control_files'
+-- ORACLE SQL QUERY TO KNOW THE LOCALIZATION AND NUMBER OF CONTROL FILES
+SELECT VALUE FROM V$SYSTEM_PARAMETER WHERE NAME = 'CONTROL_FILES'
 
--- Oracle SQL query to show the database name.
-select value from v$system_parameter where name = 'db_name'
+-- ORACLE SQL QUERY TO SHOW THE DATABASE NAME.
+SELECT VALUE FROM V$SYSTEM_PARAMETER WHERE NAME = 'DB_NAME'
 
--- Oracle SQL query over the view that shows actual Oracle conections. 
--- To use it the user need administrator privileges.
-select osuser, username, machine, program
-from v$session
-order by osuser
+-- ORACLE SQL QUERY OVER THE VIEW THAT SHOWS ACTUAL ORACLE CONECTIONS. 
+-- TO USE IT THE USER NEED ADMINISTRATOR PRIVILEGES.
+SELECT OSUSER, USERNAME, MACHINE, PROGRAM
+FROM V$SESSION
+ORDER BY OSUSER
 
--- Oracle SQL query that show the opened conections group by the program that opens the connection.
-select program Aplicacion, count(program) Numero_Sesiones
-from v$session
-group by program
-order by Numero_Sesiones desc
+-- ORACLE SQL QUERY THAT SHOW THE OPENED CONECTIONS GROUP BY THE PROGRAM THAT OPENS THE CONNECTION.
+SELECT PROGRAM APLICACION, COUNT(PROGRAM) SESSIONS_NO
+FROM V$SESSION
+GROUP BY PROGRAM
+ORDER BY SESSIONS_NO DESC
 
--- Oracle SQL query that shows Oracle users connected and the sessions number for user
-select username Usuario_Oracle, count(username) Numero_Sesiones
-from v$session
-group by username
-order by Numero_Sesiones desc
+-- ORACLE SQL QUERY THAT SHOWS ORACLE USERS CONNECTED AND THE SESSIONS NUMBER FOR USER
+SELECT USERNAME, COUNT(USERNAME) SESSIONS_NO
+FROM V$SESSION
+GROUP BY USERNAME
+ORDER BY SESSIONS_NO DESC
 
--- Objects owners number of objects for owner
-select owner, count(owner) Numero
-from dba_objects
-group by owner
-order by Numero desc
+-- OBJECTS OWNERS NUMBER OF OBJECTS FOR OWNER
+SELECT OWNER, COUNT(OWNER) OBJECTS_NO
+FROM DBA_OBJECTS
+GROUP BY OWNER
+ORDER BY OBJECTS_NO DESC
 
--- Oracle SQL query over the data Dictionary (includes all views and tables of the database)
-select * from dictionary
+-- ORACLE SQL QUERY OVER THE DATA DICTIONARY (INCLUDES ALL VIEWS AND TABLES OF THE DATABASE)
+SELECT * FROM DICTIONARY
 
--- Oracle SQL query that shows definition data from a specific table 
--- (in this case, all tables with string "XXX")
-select * from ALL_ALL_TABLES where upper(table_name) like '%XXX%'
+-- ORACLE SQL QUERY THAT SHOWS DEFINITION DATA FROM A SPECIFIC TABLE 
+-- (IN THIS CASE, ALL TABLES WITH STRING "XXX")
+SELECT * FROM ALL_ALL_TABLES WHERE UPPER(TABLE_NAME) LIKE '%XXX%'
 
--- Oracle SQL query to know tables from actual user
-select * from user_tables
+-- ORACLE SQL QUERY TO KNOW TABLES FROM ACTUAL USER
+SELECT * FROM USER_TABLES
 
--- Oracle SQL query to know all the objects of the connected user
-select * from user_catalog
+-- ORACLE SQL QUERY TO KNOW ALL THE OBJECTS OF THE CONNECTED USER
+SELECT * FROM USER_CATALOG
 
--- Oracle SQL query for Oracle DBA that shows tablespaces, disk used, free space and datafiles:
-SELECT t.tablespace_name "Tablespace", t.status "Status",
-       ROUND(MAX(d.bytes)/1024/1024,2) "Total (MB)",
-       ROUND((MAX(d.bytes)/1024/1024) -
-       (SUM(decode(f.bytes, NULL,0, f.bytes))/1024/1024),2) "Used (MB)",
-       ROUND(SUM(decode(f.bytes, NULL,0, f.bytes))/1024/1024,2) "Free (MB)",
-       t.pct_increase "% increace",
-       SUBSTR(d.file_name,1,80) "File Name"
-FROM DBA_FREE_SPACE f, DBA_DATA_FILES d, DBA_TABLESPACES t
-WHERE t.tablespace_name = d.tablespace_name AND
-      f.tablespace_name(+) = d.tablespace_name
-      AND f.file_id(+) = d.file_id GROUP BY t.tablespace_name,
-      d.file_name, t.pct_increase, t.status ORDER BY 1,3 DESC
+-- ORACLE SQL QUERY FOR ORACLE DBA THAT SHOWS TABLESPACES, DISK USED, FREE SPACE AND DATAFILES:
+SELECT T.TABLESPACE_NAME "TABLESPACE", T.STATUS "STATUS",
+       ROUND(MAX(D.BYTES)/1024/1024,2) "TOTAL (MB)",
+       ROUND((MAX(D.BYTES)/1024/1024) -
+       (SUM(DECODE(F.BYTES, NULL,0, F.BYTES))/1024/1024),2) "USED (MB)",
+       ROUND(SUM(DECODE(F.BYTES, NULL,0, F.BYTES))/1024/1024,2) "FREE (MB)",
+       T.PCT_INCREASE "% INCREACE",
+       SUBSTR(D.FILE_NAME,1,80) "FILE NAME"
+FROM DBA_FREE_SPACE F, DBA_DATA_FILES D, DBA_TABLESPACES T
+WHERE T.TABLESPACE_NAME = D.TABLESPACE_NAME AND
+      F.TABLESPACE_NAME(+) = D.TABLESPACE_NAME
+      AND F.FILE_ID(+) = D.FILE_ID GROUP BY T.TABLESPACE_NAME,
+      D.FILE_NAME, T.PCT_INCREASE, T.STATUS ORDER BY 1,3 DESC
 
--- Oracle SQL query to know Oracle products installed and version number.
-select * from product_component_version
+-- ORACLE SQL QUERY TO KNOW ORACLE PRODUCTS INSTALLED AND VERSION NUMBER.
+SELECT * FROM PRODUCT_COMPONENT_VERSION
 
--- Oracle SQL query to know roles and roles privileges
-select * from role_sys_privs
+-- ORACLE SQL QUERY TO KNOW ROLES AND ROLES PRIVILEGES
+SELECT * FROM ROLE_SYS_PRIVS
 
--- Oracle SQL query to know integrity rules
-select constraint_name, column_name from sys.all_cons_columns
+-- ORACLE SQL QUERY TO KNOW INTEGRITY RULES
+SELECT CONSTRAINT_NAME, COLUMN_NAME FROM SYS.ALL_CONS_COLUMNS
 
--- Oracle SQL query to know tables owned by a user, in this case "xxx":
-SELECT table_owner, table_name from sys.all_synonyms where table_owner like 'xxx'
+-- ORACLE SQL QUERY TO KNOW TABLES OWNED BY A USER, IN THIS CASE "XXX":
+SELECT TABLE_OWNER, TABLE_NAME FROM SYS.ALL_SYNONYMS WHERE TABLE_OWNER LIKE 'XXX'
 
--- Oracle SQL query for the same as last query
+-- ORACLE SQL QUERY FOR THE SAME AS LAST QUERY
 
 SELECT DISTINCT TABLE_NAME
 FROM ALL_ALL_TABLES
 WHERE OWNER LIKE 'HR'
--- Oracle parameters, actual value and its description.
-SELECT v.name, v.value value, decode(ISSYS_MODIFIABLE, 'DEFERRED',
-'TRUE', 'FALSE') ISSYS_MODIFIABLE, decode(v.isDefault, 'TRUE', 'YES',
+
+-- ORACLE PARAMETERS, ACTUAL VALUE AND ITS DESCRIPTION.
+SELECT V.NAME, V.VALUE VALUE, DECODE(ISSYS_MODIFIABLE, 'DEFERRED',
+'TRUE', 'FALSE') ISSYS_MODIFIABLE, DECODE(V.ISDEFAULT, 'TRUE', 'YES',
 'FALSE', 'NO') "DEFAULT", DECODE(ISSES_MODIFIABLE, 'IMMEDIATE',
 'YES','FALSE', 'NO', 'DEFERRED', 'NO', 'YES') SES_MODIFIABLE,
 DECODE(ISSYS_MODIFIABLE, 'IMMEDIATE', 'YES', 'FALSE', 'NO',
-'DEFERRED', 'YES','YES') SYS_MODIFIABLE , v.description
-FROM V$PARAMETER v
-WHERE name not like 'nls%' ORDER BY 1
+'DEFERRED', 'YES','YES') SYS_MODIFIABLE , V.DESCRIPTION
+FROM V$PARAMETER V
+WHERE NAME NOT LIKE 'NLS%' ORDER BY 1
 
--- Oracle SQL query that shows Oracle users and his data
-Select * FROM dba_users
+-- ORACLE SQL QUERY THAT SHOWS ORACLE USERS AND HIS DATA
+SELECT * FROM DBA_USERS
 
--- Oracle SQL query to know tablespaces and its owner:
-select owner, decode(partition_name, null, segment_name,
-segment_name || ':' || partition_name) name,
-segment_type, tablespace_name,bytes,initial_extent,
-next_extent, PCT_INCREASE, extents, max_extents
-from dba_segments
-Where 1=1 And extents > 1 order by 9 desc, 3
+-- ORACLE SQL QUERY TO KNOW TABLESPACES AND ITS OWNER:
+SELECT OWNER, DECODE(PARTITION_NAME, NULL, SEGMENT_NAME,
+SEGMENT_NAME || ':' || PARTITION_NAME) NAME,
+SEGMENT_TYPE, TABLESPACE_NAME,BYTES,INITIAL_EXTENT,
+NEXT_EXTENT, PCT_INCREASE, EXTENTS, MAX_EXTENTS
+FROM DBA_SEGMENTS
+WHERE 1=1 AND EXTENTS > 1 ORDER BY 9 DESC, 3
 
--- Last SQL queries executed on Oracle and user:
-select distinct vs.sql_text, vs.sharable_mem,
-vs.persistent_mem, vs.runtime_mem, vs.sorts,
-vs.executions, vs.parse_calls, vs.module,
-vs.buffer_gets, vs.disk_reads, vs.version_count,
-vs.users_opening, vs.loads,
-to_char(to_date(vs.first_load_time,
-'YYYY-MM-DD/HH24:MI:SS'),'MM/DD HH24:MI:SS') first_load_time,
-rawtohex(vs.address) address, vs.hash_value hash_value ,
-rows_processed , vs.command_type, vs.parsing_user_id ,
-OPTIMIZER_MODE , au.USERNAME parseuser
-from v$sqlarea vs , all_users au
-where (parsing_user_id != 0) AND
-(au.user_id(+)=vs.parsing_user_id)
-and (executions >= 1) order by buffer_gets/executions desc
+-- LAST SQL QUERIES EXECUTED ON ORACLE AND USER:
+SELECT DISTINCT VS.SQL_TEXT, VS.SHARABLE_MEM,
+VS.PERSISTENT_MEM, VS.RUNTIME_MEM, VS.SORTS,
+VS.EXECUTIONS, VS.PARSE_CALLS, VS.MODULE,
+VS.BUFFER_GETS, VS.DISK_READS, VS.VERSION_COUNT,
+VS.USERS_OPENING, VS.LOADS,
+TO_CHAR(TO_DATE(VS.FIRST_LOAD_TIME,
+'YYYY-MM-DD/HH24:MI:SS'),'MM/DD HH24:MI:SS') FIRST_LOAD_TIME,
+RAWTOHEX(VS.ADDRESS) ADDRESS, VS.HASH_VALUE HASH_VALUE ,
+ROWS_PROCESSED , VS.COMMAND_TYPE, VS.PARSING_USER_ID ,
+OPTIMIZER_MODE , AU.USERNAME PARSEUSER
+FROM V$SQLAREA VS , ALL_USERS AU
+WHERE (PARSING_USER_ID != 0) AND
+(AU.USER_ID(+)=VS.PARSING_USER_ID)
+AND (EXECUTIONS >= 1) ORDER BY BUFFER_GETS/EXECUTIONS DESC
 
--- Oracle SQL query to know all the tablespaces:
-select * from V$TABLESPACE
+-- ORACLE SQL QUERY TO KNOW ALL THE TABLESPACES:
+SELECT * FROM V$TABLESPACE
 
--- Oracle SQL query to know free and used Shared_Pool
-select name,to_number(value) bytes
-from v$parameter where name ='shared_pool_size'
-union all
-select name,bytes
-from v$sgastat where pool = 'shared pool' and name = 'free memory'
-Cursores abiertos por usuario
-select b.sid, a.username, b.value Cursores_Abiertos
-from v$session a,
-v$sesstat b,
-v$statname c
-where c.name in ('opened cursors current')
-and b.statistic# = c.statistic#
-and a.sid = b.sid
-and a.username is not null
-and b.value >0
-order by 3
+-- ORACLE SQL QUERY TO KNOW FREE AND USED SHARED_POOL
+SELECT NAME,TO_NUMBER(VALUE) BYTES
+FROM V$PARAMETER WHERE NAME ='SHARED_POOL_SIZE'
+UNION ALL
+SELECT NAME,BYTES
+FROM V$SGASTAT WHERE POOL = 'SHARED POOL' AND NAME = 'FREE MEMORY'
+CURSORES ABIERTOS POR USUARIO
+SELECT B.SID, A.USERNAME, B.VALUE CURSORES_ABIERTOS
+FROM V$SESSION A,
+V$SESSTAT B,
+V$STATNAME C
+WHERE C.NAME IN ('OPENED CURSORS CURRENT')
+AND B.STATISTIC# = C.STATISTIC#
+AND A.SID = B.SID
+AND A.USERNAME IS NOT NULL
+AND B.VALUE >0
+ORDER BY 3
 
--- Oracle SQL query to know cache hits (it must be more than 1%)
-select sum(pins) Ejecuciones, sum(reloads) Fallos_cache,
-trunc(sum(reloads)/sum(pins)*100,2) Porcentaje_aciertos
-from v$librarycache
-where namespace in ('TABLE/PROCEDURE','SQL AREA','BODY','TRIGGER');
+-- ORACLE SQL QUERY TO KNOW CACHE HITS (IT MUST BE MORE THAN 1%)
+SELECT SUM(PINS) EJECUCIONES, SUM(RELOADS) FALLOS_CACHE,
+TRUNC(SUM(RELOADS)/SUM(PINS)*100,2) PORCENTAJE_ACIERTOS
+FROM V$LIBRARYCACHE
+WHERE NAMESPACE IN ('TABLE/PROCEDURE','SQL AREA','BODY','TRIGGER');
 
--- Complete SQL queries executed with a specific text in SQL sentence.
-SELECT c.sid, d.piece, c.serial#, c.username, d.sql_text
-FROM v$session c, v$sqltext d
-WHERE c.sql_hash_value = d.hash_value
-and upper(d.sql_text) like '%WHERE CAMPO LIKE%'
-ORDER BY c.sid, d.piece 
+-- COMPLETE SQL QUERIES EXECUTED WITH A SPECIFIC TEXT IN SQL SENTENCE.
+SELECT C.SID, D.PIECE, C.SERIAL#, C.USERNAME, D.SQL_TEXT
+FROM V$SESSION C, V$SQLTEXT D
+WHERE C.SQL_HASH_VALUE = D.HASH_VALUE
+AND UPPER(D.SQL_TEXT) LIKE '%WHERE CAMPO LIKE%'
+ORDER BY C.SID, D.PIECE 
 
--- A SQL query (filtered by sid)
-SELECT c.sid, d.piece, c.serial#, c.username, d.sql_text
-FROM v$session c, v$sqltext d
-WHERE c.sql_hash_value = d.hash_value
-and sid = 105
-ORDER BY c.sid, d.piece
+-- A SQL QUERY (FILTERED BY SID)
+SELECT C.SID, D.PIECE, C.SERIAL#, C.USERNAME, D.SQL_TEXT
+FROM V$SESSION C, V$SQLTEXT D
+WHERE C.SQL_HASH_VALUE = D.HASH_VALUE
+AND SID = 105
+ORDER BY C.SID, D.PIECE
 
--- Oracle SQL query to know the database size
-select sum(BYTES)/1024/1024 MB from DBA_EXTENTS
+-- ORACLE SQL QUERY TO KNOW THE DATABASE SIZE
+SELECT SUM(BYTES)/1024/1024 MB FROM DBA_EXTENTS
 
--- Oracle SQL query to calculate the size of the database data files
-select sum(bytes)/1024/1024 MB from dba_data_files
+-- ORACLE SQL QUERY TO CALCULATE THE SIZE OF THE DATABASE DATA FILES
+SELECT SUM(BYTES)/1024/1024 MB FROM DBA_DATA_FILES
 
--- Oracle SQL query to calculate the size of a concrete table excluding the indexes
-select sum(bytes)/1024/1024 MB from user_segments
-where segment_type='TABLE' and segment_name='TABLENAME'
+-- ORACLE SQL QUERY TO CALCULATE THE SIZE OF A CONCRETE TABLE EXCLUDING THE INDEXES
+SELECT SUM(BYTES)/1024/1024 MB FROM USER_SEGMENTS
+WHERE SEGMENT_TYPE='TABLE' AND SEGMENT_NAME='TABLENAME'
 
--- Oracle SQL query to calculate the size of a concrete table including the indexes
-select sum(bytes)/1024/1024 Table_Allocation_MB from user_segments
-where segment_type in ('TABLE','INDEX') and
-(segment_name='TABLENAME'or segment_name in
-(select index_name from user_indexes where table_name='TABLENAME'))
+-- ORACLE SQL QUERY TO CALCULATE THE SIZE OF A CONCRETE TABLE INCLUDING THE INDEXES
+SELECT SUM(BYTES)/1024/1024 TABLE_ALLOCATION_MB FROM USER_SEGMENTS
+WHERE SEGMENT_TYPE IN ('TABLE','INDEX') AND
+(SEGMENT_NAME='TABLENAME'OR SEGMENT_NAME IN
+(SELECT INDEX_NAME FROM USER_INDEXES WHERE TABLE_NAME='TABLENAME'))
 
--- Oracle SQL query to know the memory used by a column in a table
-select sum(vsize('COLUMNNAME'))/1024/1024 MB from 'TABLENAME'
+-- ORACLE SQL QUERY TO KNOW THE MEMORY USED BY A COLUMN IN A TABLE
+SELECT SUM(VSIZE('COLUMNNAME'))/1024/1024 MB FROM 'TABLENAME'
 
--- Oracle SQL query to calculate memory used by a user
-SELECT owner, SUM(BYTES)/1024/1024 MB FROM DBA_EXTENTS
-group by owner
+-- ORACLE SQL QUERY TO CALCULATE MEMORY USED BY A USER
+SELECT OWNER, SUM(BYTES)/1024/1024 MB FROM DBA_EXTENTS
+GROUP BY OWNER
 
--- Oracle SQL query to calculate size from the diferent segments 
--- (tables, indexes, undo, rollback, cluster, ...)
+-- ORACLE SQL QUERY TO CALCULATE SIZE FROM THE DIFERENT SEGMENTS 
+-- (TABLES, INDEXES, UNDO, ROLLBACK, CLUSTER, ...)
 SELECT SEGMENT_TYPE, SUM(BYTES)/1024/1024 MB FROM DBA_EXTENTS
-group by SEGMENT_TYPE
+GROUP BY SEGMENT_TYPE
 
--- Oracle SQL query to obtain all the Oracle functions: NVL, ABS, LTRIM, ...
-SELECT distinct object_name
-FROM all_arguments
-WHERE package_name = 'STANDARD'
-order by object_name
+-- ORACLE SQL QUERY TO OBTAIN ALL THE ORACLE FUNCTIONS: NVL, ABS, LTRIM, ...
+SELECT DISTINCT OBJECT_NAME
+FROM ALL_ARGUMENTS
+WHERE PACKAGE_NAME = 'STANDARD'
+ORDER BY OBJECT_NAME
 
--- Oracle SQL query to calculate the size of all the database objects, ordering from more to less
+-- ORACLE SQL QUERY TO CALCULATE THE SIZE OF ALL THE DATABASE OBJECTS, ORDERING FROM MORE TO LESS
 SELECT SEGMENT_NAME, SUM(BYTES)/1024/1024 MB FROM DBA_EXTENTS
-group by SEGMENT_NAME
-order by 2 desc 
+GROUP BY SEGMENT_NAME
+ORDER BY 2 DESC 
