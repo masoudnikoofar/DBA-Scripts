@@ -1,0 +1,36 @@
+########PRIMARY
+CREATE USER REPLICA REPLICATION LOGIN ENCRYPTED PASSWORD 'PASSWORD';
+\du
+
+vi postgresql.conf
+
+wal_level = hot_standby
+checkpoint_segments = 8
+archive_mode = on
+archive_command='cp -i %p /var/lib/pgsql/data/archive/%f'
+max_wal_senders = 3
+wal_keep_segments = 8
+
+vi pg_hba.conf
+
+host    replication     replica SECONDARY_IP_ADDRESS/24       md5
+
+########SECONDARY
+vi postgresql.conf
+
+wal_level = hot_standby
+max_wal_senders = 3
+wal_keep_segments = 8
+hot_standby = on
+
+systemctl stop postgresql
+
+su - postgres
+
+mv /var/lib/pgsql/data /var/lib/pgsql/data_original
+
+pg_basebackup -h PRIMARY_IP_ADDRESS -D /var/lib/pgsql/10/data -U replica -v -P
+
+vi recovery.conf
+
+pg_resetxlog /var/lib/pgsql/data -f

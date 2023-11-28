@@ -1,0 +1,7 @@
+schtasks /create /tn "DB_Backup_FTP_Diff" /tr D:\DB_Backup\Scripts\Diff.bat /sc daily /st 23:30:00 /ru DOMAIN\USER /rp PASSWORD
+schtasks /create /tn "DB_Backup_FTP_Full" /tr D:\DB_Backup\Scripts\Full.bat /sc weekly /st 23:59:00 /d FRI
+schtasks /create /tn "DB_Backup_FTP_Trn" /tr D:\DB_Backup\Scripts\Trans.bat /sc hourly /st 07:30:00 
+
+schtasks /delete /tn "DB_Backup_FTP_Full"  /f
+
+

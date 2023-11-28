@@ -1,2 +1,0 @@
-show dbs
-db.changeUserPassword("user","123");

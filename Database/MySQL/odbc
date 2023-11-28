@@ -1,0 +1,50 @@
+yum install unixODBC mysql-connector-odbc
+yum install unixODBC-devel
+
+
+cat /etc/odbcinst.ini
+# Driver from the mysql-connector-odbc package
+# Setup from the unixODBC package
+
+
+cat /etc/odbc.ini
+[uptimedb]
+Description         = MyUptimeMysqlServer
+Driver              = MySQL
+Database            = uptimedb1
+Server              = xx.xx.xx.xx
+User                = myuserhere
+Password            = mypasswordhere
+Port                = 3306
+
+isql -v uptimedb
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+vi /home/user/odbcadd.txt
+
+[MyMSSQLServer]
+Driver      = ODBC Driver 13 for SQL Server
+Description = My MS SQL Server
+Trace       = No
+Server      = 10.100.1.10
+
+# register the SQL Server database DSN information in /etc/odbc.ini
+sudo odbcinst -i -s -f /home/user/odbcadd.txt -l
+
+# check the DSN installation with:
+odbcinst -j
+cat /etc/odbc.ini
+
+

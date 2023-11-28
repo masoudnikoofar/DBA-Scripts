@@ -1,0 +1,29 @@
+NOW=$(date +"%Y%m%d_%H%M%S")
+server_name="SERVER_NAME"
+dumpdir=/path/DB_Backups/Full/
+
+cd $dumpdir
+mkdir -p $NOW
+cd $NOW
+
+
+mysqldump --all-databases -u root  > Full_$NOW.sql
+
+databases=`mysql --user=root -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
+for db in $databases; do
+  mysqldump --force --opt --user=root --databases $db > "$db.sql"
+done
+cd $dumpdir
+tar czvf $NOW.tar.gz $NOW
+
+HOST=FTP_SERVER_IP_ADDRESS  #This is the FTP servers host or IP address.
+USER=FTP_SERVER_USER_NAME   #This is the FTP user that has access to the server.
+PASS=FTP_SERVER_PASSWORD    #This is the password for the FTP user.
+ftp -inv $HOST << EOF
+user $USER $PASS
+binary
+put $NOW.tar.gz
+bye
+EOF
+
+find $dumpdir -type f -name '*.sql' -mtime +10 -exec rm -rf {} \;

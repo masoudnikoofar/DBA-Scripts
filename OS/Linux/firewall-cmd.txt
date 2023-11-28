@@ -1,0 +1,10 @@
+firewall-cmd --permanent --new-zone=ZONE_NAME
+firewall-cmd --reload
+
+firewall-cmd --list-all-zones | grep active
+
+firewall-cmd --zone=public --list-all
+
+firewall-cmd --zone=ZONE_NAME --add-source=xx.xx.xx.xx/yy --permanent
+firewall-cmd --zone=ZONE_NAME --add-port=PORT/PROTOCOL --permanent
+firewall-cmd --reload
