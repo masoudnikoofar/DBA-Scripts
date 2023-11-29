@@ -1,8 +1,5 @@
-**********http://www.erichumphrey.com/2011/06/prevent-sql-logins-from-using-ssms/
---drop trigger enbdba_afterlogon_trigger on all server;
-
-
 use master;
+-------------------------------------------------
 CREATE TABLE dbo.enbdba_users (LoginName varchar(100),IS_LIMITED varchar(3) default 'NO');
 CREATE TABLE dbo.enbdba_users_limits (
 LoginName varchar(100),
@@ -11,14 +8,13 @@ LoginType VARCHAR(100),
 ClientHost varchar(100),
 program_name varchar(100)
 );
-
+-------------------------------------------------
 CREATE TABLE dbo.loginData (
 	id INT IDENTITY PRIMARY KEY,
 	data XML,
 	program_name sysname
 );
-GO
-
+-------------------------------------------------
 CREATE VIEW dbo.enbdba_users_limits_log
 AS
 SELECT id
@@ -32,12 +28,9 @@ SELECT id
       ,data.value('(/EVENT_INSTANCE/ClientHost)[1]', 'sysname') AS ClientHost
       ,data.value('(/EVENT_INSTANCE/IsPooled)[1]', 'bit') AS IsPooled
       ,program_name
-FROM loginData
-GO
- 
-
-drop trigger enbdba_afterlogon_trigger on all server;
-
+FROM loginData;
+-------------------------------------------------
+--drop trigger enbdba_afterlogon_trigger on all server;
 CREATE TRIGGER enbdba_afterlogon_trigger
 ON ALL SERVER WITH EXECUTE AS 'sa'
 FOR LOGON
@@ -65,9 +58,10 @@ BEGIN
 
 		IF @ROW_COUNT<1
 		BEGIN
-			INSERT INTO loginData(data, program_name) VALUES(@data, @AppName)
+			INSERT INTO loginData(data, program_name) VALUES (@data, @AppName);
 			ROLLBACK; 
 		END;
 	END;
 END;
-GO
+-------------------------------------------------
+select * From master.dbo.audit_logins x where x.col_loginname='masoud';
