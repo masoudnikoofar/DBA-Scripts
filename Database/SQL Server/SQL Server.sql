@@ -1,39 +1,21 @@
-
-
-----shrink log file
-
-USE Risk_mng_OLTP
-GO
-ALTER DATABASE Risk_mng_OLTP SET RECOVERY SIMPLE WITH NO_WAIT
-DBCC SHRINKFILE(Risk_Mng_TAT_log_BK, 1)
-ALTER DATABASE Risk_mng_OLTP SET RECOVERY FULL WITH NO_WAIT
-GO
-
-
-
-
-
+----SHRINK LOG FILE
+USE DB_NAME;
+ALTER DATABASE DB_NAME SET RECOVERY SIMPLE WITH NO_WAIT;
+DBCC SHRINKFILE(FILE_NAME, 1);
+ALTER DATABASE DB_NAME SET RECOVERY FULL WITH NO_WAIT;
 ----TPS
 SELECT cntr_value, *
- FROM sys.dm_os_performance_counters
- WHERE counter_name = 'transactions/sec'
- AND OBJECT_NAME = 'SQLServer:Databases';
- 
+FROM sys.dm_os_performance_counters
+WHERE counter_name = 'transactions/sec'
+AND OBJECT_NAME = 'SQLServer:Databases';
  
 SELECT cntr_value, *
- FROM sys.dm_os_performance_counters
- WHERE instance_name='NonDomesticTransactions';
- 
- 
- 
- ----SIZE
- use filerwin
-exec sp_spaceused
-
-
+FROM sys.dm_os_performance_counters
+WHERE instance_name='DB_NAME';
+----SIZE
+use DB_NAME;
+exec sp_spaceused;
 --TABLES SIZE
-
-
 SELECT 
     t.NAME AS TableName,
     s.Name AS SchemaName,
@@ -58,21 +40,12 @@ WHERE
 GROUP BY 
     t.Name, s.Name, p.Rows
 ORDER BY 
-    t.Name
-
-
-
-
+    t.Name;
 ---
 SELECT CONVERT (varchar, SERVERPROPERTY('collation'));
-
 SELECT name, collation_name FROM sys.databases;
-
 EXECUTE sp_helpsort;
-
 SELECT name, description FROM sys.fn_helpcollations();
-
-SELECT CONVERT (varchar, DATABASEPROPERTYEX('database_name','collation'));
-
+SELECT CONVERT (varchar, DATABASEPROPERTYEX('DB_NAME','collation'));
 SELECT name, collation_name FROM sys.columns WHERE name = N'<insert character data type column name>';
 
