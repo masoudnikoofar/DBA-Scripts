@@ -1,5 +1,4 @@
 --truncate table master.dbo.audit_logins 
-
 Create Table master.dbo.audit_logins
 (
 Col_loginName varchar (50),
@@ -7,16 +6,10 @@ Col_LoginType varchar (50),
 Col_LoginTime datetime,
 Col_ClientHost varchar (50) 
 );
-
-GO
--------
-
-
-drop trigger enbdba_afterlogon_trigger on all server
-
--------
-
-Create  TRIGGER enbdba_afterlogon_trigger
+-------------------------------------------------
+drop trigger masoud_dba_afterlogon_trigger on all server
+-------------------------------------------------
+Create  TRIGGER masoud_dba_afterlogon_trigger
 ON ALL SERVER WITH EXECUTE AS 'sa'
 FOR LOGON
 AS
@@ -35,10 +28,6 @@ BEGIN
 	   (@LogonTriggerData.value('(/EVENT_INSTANCE/LoginType)[1]', 'varchar(50)')='SQL Login')
 			rollback;
        */
-	   
-		
-end
-
-
--------
-select * From master.dbo.audit_logins x where x.col_loginname='masoud'
+end;
+-------------------------------------------------
+select * From master.dbo.audit_logins x where x.col_loginname='masoud';

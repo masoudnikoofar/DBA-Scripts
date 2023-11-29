@@ -1,15 +1,11 @@
-**********http://www.erichumphrey.com/2011/06/prevent-sql-logins-from-using-ssms/
---drop trigger enbdba_afterlogon_trigger on all server;
-
-
 use master;
+--------------------------------------------------------------
 CREATE TABLE dbo.loginData (
 	id INT IDENTITY PRIMARY KEY,
 	data XML,
 	program_name sysname
 );
-GO
-
+--------------------------------------------------------------
 CREATE VIEW loginDataView
 AS
 SELECT id
@@ -23,13 +19,11 @@ SELECT id
       ,data.value('(/EVENT_INSTANCE/ClientHost)[1]', 'sysname') AS ClientHost
       ,data.value('(/EVENT_INSTANCE/IsPooled)[1]', 'bit') AS IsPooled
       ,program_name
-FROM loginData
-GO
- 
-
-drop trigger enbdba_afterlogon_trigger on all server;
-
-CREATE TRIGGER enbdba_afterlogon_trigger
+FROM loginData;
+-------------------------------------------------------------- 
+--drop trigger masoud_dba_afterlogon_trigger on all server;
+--------------------------------------------------------------
+CREATE TRIGGER masoud_dba_afterlogon_trigger
 ON ALL SERVER WITH EXECUTE AS 'sa'
 FOR LOGON
 AS
@@ -58,4 +52,3 @@ BEGIN
 		INSERT INTO loginData(data, program_name) VALUES(@data, @AppName)
 	END
 END;
-GO
