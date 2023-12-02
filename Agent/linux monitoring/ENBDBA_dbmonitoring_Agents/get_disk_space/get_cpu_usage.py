@@ -5,6 +5,3 @@ cpu_percentage1 = str(round(float(os.popen('''grep 'cpu0 ' /proc/stat | awk '{us
 cpu_percentage2 = str(round(float(os.popen('''grep 'cpu1 ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}' ''').readline()),2))
 cpu_percentage3 = str(round(float(os.popen('''grep 'cpu2 ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}' ''').readline()),2))
 cpu_percentage4 = str(round(float(os.popen('''grep 'cpu3 ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}' ''').readline()),2))
-
-
-print cpu_percentage
